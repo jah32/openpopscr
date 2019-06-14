@@ -51,6 +51,7 @@ oo$get_par("phi", k = 1)
 
 
 # test openCR 
+library(openCR)
 
 spltcap <- split(scrdat$capthist(), as.factor(primary), byoccasion = TRUE)
 
