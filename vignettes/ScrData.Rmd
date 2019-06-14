@@ -31,7 +31,7 @@ library(secr)
 
 The [<code>secr</code> package](https://cran.r-project.org/package=secr) contains the functions <code>read.traps</code>, <code>make.capthist</code>, and <code>make.mask</code>. They can be used to convert raw data often collected in SCR surveys into a capthist object and mask object. These functions are available in the <code>openpopscr</code> package also. 
 
-On a side note, I call the mask object a mesh. The terms are interchangable. 
+On a side note, I call the mask object a mesh. The terms are interchangeable. 
 
 For this vignette, I will use the <code>stoatDNA</code> data available from the <code>secr</code> package. These data
 come from a DNA hair trapping survey on stoats. 
