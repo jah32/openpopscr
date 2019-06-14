@@ -29,7 +29,7 @@
 #' @description Object represents the encounter function / detection function. 
 #' \itemize{
 #'   \item parameters: a character vector of parameter names
-#'   \item fn: either a character denoting a encoutner rate function / detection function or a function
+#'   \item fn: either a character denoting a encounter rate function / detection function or a function
 #'   that takes parameter vector and distance and returns encounter rate or probability 
 #'   \item prob: if fn supplied by user return probability then set this to TRUE, otherwise it is FALSE 
 #' }
