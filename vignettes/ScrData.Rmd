@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The ScrData class is an [<code>R6</code> class](https://cran.r-project.org/web/packages/R6/vignettes/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
+The ScrData class is an [<code>R6</code> class](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
 
 In this vignette, I describe how spatial capture-recapture data can be stored within an <code>R6</code> object of the <code>ScrData</code> class. 
 
