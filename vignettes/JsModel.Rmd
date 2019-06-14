@@ -140,7 +140,7 @@ mod$get_par("beta", k = 1)
 mod$get_par("D")
 ```
 
-I specify $k = 1$ in the functions abovebecause by default
+I specify $k = 1$ in the functions above because by default
 <code>get_par</code> returns the value of these parameters for every occasion. This is
 useful when they vary by occasion, but here they are constants, so I only want
 their value on a single occasion. 
@@ -205,7 +205,7 @@ For JS models, transience can play an important role. When individuals are trans
 their activity can pass in and out of range of detection; individuals that permanently
 pass out of range of detection are best explained, by the JSModel, as having died
 and so survival probability is underestimated. Furthermore, transience can cause 
-overestimation of detection probability and substantial underestmation of density. 
+overestimation of detection probability and substantial underestimation of density. 
 
 You can simulate Js SCR surveys with transience: 
 ```{r cjstrans, eval = FALSE}
