@@ -11,11 +11,11 @@ set.seed(58229)
 # parameters
 true_par <- list(D = 1000, lambda0 = 0.5, sigma = 20)
 
-# make mesh 
-mesh <- make.mask(detectors, buffer = 100, nx = 64, ny = 64, type = "trapbuffer")
-
 # make detectors array 
 detectors <- make.grid(nx = 7, ny = 7, spacing = 20, detector = "count")
+
+# make mesh 
+mesh <- make.mask(detectors, buffer = 100, nx = 64, ny = 64, type = "trapbuffer")
 
 # set number of occasions to simulate
 n_occasions <- 5 
@@ -60,7 +60,7 @@ for (sim in 1:nsims) {
 
 # point and interval estimates of D
 res <- sapply(obj_list, FUN = function(obj) { 
-  obj$estimates()$par["D",]
+  obj$estimates()$par["D.(Intercept)",]
 })
 
 # transpose the output of sapply 
