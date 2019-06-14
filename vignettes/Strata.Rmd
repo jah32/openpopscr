@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 The StrataModel class is an [<code>R6</code> class](https://cran.r-project.org/web/packages/R6/vignettes/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
 
 In this vignette, I describe how other types of model classes (ScrModel, CjsModel, JsTransientModel) can be 
-fit to multiple strata using the StataModel class.
+fit to multiple strata using the StrataModel class.
 
 ```{r load_pkg}
 library(openpopscr)
@@ -43,7 +43,7 @@ other parameters, each stratum will have its own particular value. Strata are
 treated independently conditional on the parameters. 
 
 Here, all strata have the same value of lambda0, but different sigma and D parameters. 
-I create a <code>ScrData</code> object for each stratum seperately and then
+I create a <code>ScrData</code> object for each stratum separately and then
 store these in a list. I use the same detector array setup and mesh in each stratum, but
 these could differ. 
 
