@@ -35,7 +35,8 @@ start <- list(lambda0 = 2,
               sigma = 20, 
               phi = 0.5, 
               sd = 2)
-
+#alternatively
+start <- get_start_values(scrdat, model = "CjsTransientModel")
 
 obj <- CjsTransientModel$new(par, scrdat, start, num_cores = 4)
 
