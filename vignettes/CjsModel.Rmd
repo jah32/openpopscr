@@ -167,7 +167,7 @@ covariates are not implemented in <code>openpopscr</code>. By default, the
 covariate $t$ is created to allow for parameters to depend on occasion. 
 
 As an example, one can fit a model where survival changes depending on 
-anthropogenic distriburance (measured by some continuous covariate): 
+anthropogenic disturbance (measured by some continuous covariate): 
 ```{r survt}
 # simulate a disturbance covariate (% deforestation for example)
 set.seed(385638)
