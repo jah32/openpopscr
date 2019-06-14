@@ -281,13 +281,13 @@ ScrModel <- R6Class("ScrModel",
     
     simulate = function(seed = NULL) {
       if (!is.null(seed)) set.seed(seed)
-      new_dat <- simulate_scr(self$par(), 
-                              self$data()$n_occasions(), 
-                              self$data()$traps(), 
-                              self$data()$mesh(), 
-                              self$data()$time(), 
-                              seed, 
-                              private$print_)
+      new_dat <- simulate_scr(par = self$par(), 
+                              n_occasions = self$data()$n_occasions(), 
+                              detectors = self$data()$traps(), 
+                              mesh = self$data()$mesh(), 
+                              time = self$data()$time(), 
+                              seed = seed, 
+                              print = private$print_)
       return(new_dat)
     }, 
     
