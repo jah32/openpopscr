@@ -136,7 +136,7 @@ duration $1$.
 The ScrData object can handle three kinds of covariates: detector-specific, temporal, or both. 
 
 Detector-specific covariates are called $j$ type covariates, because $j$ is typically the mathematical index used for detectors. 
-Suppose there is a variable $x$ that could affect how detectors operate. I create a imaginary variable here: 
+Suppose there is a variable $x$ that could affect how detectors operate. I create an imaginary variable here: 
 
 ```{r x_cov}
 x <- factor(sample(c("bad", "good"), size = nrow(detectors), replace = TRUE))
