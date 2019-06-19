@@ -281,7 +281,12 @@ ScrModel <- R6Class("ScrModel",
     
     simulate = function(seed = NULL) {
       if (!is.null(seed)) set.seed(seed)
-      new_dat <- simulate_scr(par = self$par(), 
+      if(private$detfn_$fn_name() != "HHN")return("Error")
+      par <- list()
+      par$sigma<- self$get_par("sigma", j=1)
+      par$lambda0<-self$get_par("lambda0", j=1)
+      par$D<-self$get_par("D")
+      new_dat <- simulate_scr(par = par, 
                               n_occasions = self$data()$n_occasions(), 
                               detectors = self$data()$traps(), 
                               mesh = self$data()$mesh(), 
