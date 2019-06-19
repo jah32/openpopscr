@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The CjsModel class is a [<code>R6</code> class](https://cran.r-project.org/web/packages/R6/vignettes/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
+The CjsModel class is a [<code>R6</code> class](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
 
 In this vignette, I describe how Cormack-Jolly-Seber (CJS) spatial capture-recapture (SCR) models can be used within an <code>R6</code> object of the <code>CjsModel</code> class. I recommend you read
 the vignettes on the ScrData and ScrModel classes before reading this one. 
@@ -109,7 +109,7 @@ start
 Before fitting the model, I create the model object: 
 
 ```{r modelobj, eval = FALSE}
-mod <- CjsModel$new(form, scrdat, start, num_cores = 4)
+mod <- CjsModel$new(form, scrdat, start)
 ```
 
 Once the model object has been created, you can fit the model using the fit
@@ -181,7 +181,7 @@ form_surv[[3]]<- phi ~ disturb
 ```
 ```{r survmake, eval = FALSE}
 # create new model object 
-mod_surv <- CjsModel$new(form_surv, scrdat, start, num_cores = 4)
+mod_surv <- CjsModel$new(form_surv, scrdat, start)
 # fit model
 mod_surv$fit()
 ```
@@ -254,7 +254,7 @@ start <- get_start_values(scrtransdat, model = "CjsModel")
 ```
 ```{r statmake, eval = FALSE}
 # create model object 
-stat <- CjsModel$new(stat_form, scrtransdat, start, num_cores = 4)
+stat <- CjsModel$new(stat_form, scrtransdat, start)
 # fit model 
 stat$fit()
 ```
@@ -286,7 +286,7 @@ form <- list(lambda0 ~ 1,
 start <- get_start_values(scrtransdat, model = "CjsTransientModel")
 ```
 ```{r fittedtransmake, eval = FALSE}
-trans <- CjsTransientModel$new(form, scrtransdat, start, num_cores = 4)
+trans <- CjsTransientModel$new(form, scrtransdat, start)
 ```
 
 I now fit the model as usual:

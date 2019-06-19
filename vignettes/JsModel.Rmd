@@ -18,9 +18,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-The JsModel class is a [<code>R6</code> class](https://cran.r-project.org/web/packages/R6/vignettes/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
+The JsModel class is a [<code>R6</code> class](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
 
-In this vignette, I describe how Jolly-Seber (Cjs) spatial capture-recapture (SCR) models can be used within an <code>R6</code> object of the <code>JsModel</code> class. The JS model is formulated
+In this vignette, I describe how Jolly-Seber (Js) spatial capture-recapture (SCR) models can be used within an <code>R6</code> object of the <code>JsModel</code> class. The JS model is formulated
 according to the Schwarz-Arnason parameterisation. I recommend you read
 the vignettes on the ScrData and ScrModel classes before reading this one. 
 
@@ -40,7 +40,7 @@ scrtransdat <- jsmodel_example$scrtransdat
 
 ## Simulating data 
 
-The <code>openpopscr</code> package uses the <code>ScrData</code> class to store data. See the vignette on the <code>ScrData</code> class to see how to create the data object from your own raw data. In this section, I simulate a Cjs SCR survey. The simulation function is useful when you want to try out a new method where you know what the correct parameter estimates are, you want to test how robust a method is to violations of its assumptions, or you want to see how data simulated from a model compare with real data.
+The <code>openpopscr</code> package uses the <code>ScrData</code> class to store data. See the vignette on the <code>ScrData</code> class to see how to create the data object from your own raw data. In this section, I simulate a Js SCR survey. The simulation function is useful when you want to try out a new method where you know what the correct parameter estimates are, you want to test how robust a method is to violations of its assumptions, or you want to see how data simulated from a model compare with real data.
 
 To simulate a survey, I require true detection, survival parameters, and recruitment parameters, a detector layout, and a mesh. The specified value of <code>beta</code> is the proportion of the 
 super-population (those ever to have lived) to be a live in the first occasion. 
@@ -104,7 +104,7 @@ start
 Before fitting the model, I create the model object: 
 
 ```{r modelobj, eval = FALSE}
-mod <- JsModel$new(form, scrdat, start, num_cores = 4)
+mod <- JsModel$new(form, scrdat, start)
 ```
 
 Once the model object has been created, you can fit the model using the fit
@@ -177,7 +177,7 @@ form_seas <- form
 # update formula for lambda0 to include age 
 form_seas[[4]]<- beta ~ season
 # create new model object 
-mod_seas <- JsModel$new(form_seas, scrdat, start, num_cores = 4)
+mod_seas <- JsModel$new(form_seas, scrdat, start)
 # fit model
 mod_seas$fit()
 ```
@@ -208,7 +208,7 @@ and so survival probability is underestimated. Furthermore, transience can cause
 overestimation of detection probability and substantial underestimation of density. 
 
 You can simulate Js SCR surveys with transience: 
-```{r cjstrans, eval = FALSE}
+```{r jstrans, eval = FALSE}
 # set truth 
 true_par <- list(D = 1000, lambda0 = 2, sigma = 10, phi = 0.8, beta = 0.2, sd = 20)
 # make detectors array 
@@ -239,7 +239,7 @@ Nevertheless, I will first fit a stationary JSModel to these data:
 stat_form <- list(lambda0 ~ 1, sigma ~ 1, phi ~ 1, beta ~ 1)
 start <- get_start_values(scrtransdat, model = "JsModel")
 # create model object 
-stat <- JsModel$new(stat_form, scrtransdat, start, num_cores = 4)
+stat <- JsModel$new(stat_form, scrtransdat, start)
 # fit model 
 stat$fit()
 ```
@@ -268,7 +268,7 @@ form <- list(lambda0 ~ 1,
 
 start <- get_start_values(scrtransdat, model = "JsTransientModel")
 
-trans <- JsTransientModel$new(form, scrtransdat, start, num_cores = 4)
+trans <- JsTransientModel$new(form, scrtransdat, start)
 
 ```
 

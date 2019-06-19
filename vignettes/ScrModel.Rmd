@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The ScrModel class is a [<code>R6</code> class](https://cran.r-project.org/web/packages/R6/vignettes/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
+The ScrModel class is a [<code>R6</code> class](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
 
 In this vignette, I describe how spatial capture-recapture models can be used within an <code>R6</code> object of the <code>ScrModel</code> class. 
 
@@ -106,7 +106,7 @@ does not allow for density to change over space.
 Before fitting the model, I create the model object: 
 
 ```{r modelobj, eval = FALSE}
-mod <- ScrModel$new(form, scrdat, start, num_cores = 4)
+mod <- ScrModel$new(form, scrdat, start)
 ```
 
 I have specified here for the model to use $4$ processor cores for any parallel
@@ -221,7 +221,7 @@ form_detage[[1]]<- lambda0 ~ age
 ```
 ```{r fitmoddetage, eval = FALSE}
 # create new model object 
-mod_detage <- ScrModel$new(form_detage, scrdat, start, num_cores = 4)
+mod_detage <- ScrModel$new(form_detage, scrdat, start)
 # fit model
 mod_detage$fit()
 ```{r analysemodetage}
