@@ -62,7 +62,7 @@ start <- list(lambda0 = 2,
               sigma = 20,
               D = 1000)
 
-obj <- ScrModel$new(form, scrdat, start, num_cores = 4)
+obj <- ScrModel$new(form, scrdat, start)
 
 # compute initial likelihood 
 #obj$calc_llk()

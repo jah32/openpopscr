@@ -37,7 +37,7 @@ start <- list(lambda0 = 2,
               D = 1000)
 
 
-oo <- JsTransientModel$new(par, scrdat, start, num_cores = 4)
+oo <- JsTransientModel$new(par, scrdat, start)
 
 oo$calc_llk()
 
