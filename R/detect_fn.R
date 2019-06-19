@@ -50,6 +50,7 @@ DetFn <- R6Class("DetFn",
                           link2response = NULL, 
                           response2link = NULL) {
       if (is.null(fn)) fn <- "HHN"
+      private$fnname_<- fn
       if (class(fn) == "function") {
         private$fn_ <- fn
         private$parameters_ <- parameters 
@@ -70,12 +71,14 @@ DetFn <- R6Class("DetFn",
           private$link2response_ <- list("exp", "exp")
           private$response2link_ <- list("log", "log")
         }
-      } 
+      }
     },
     
     print = function(i = ".") {
        print(private$fn_)
     }, 
+    
+    fn_name = function() {return(private$fnname_)},
     
     g = function(x, par) {
       if (private$prob_) return(private$fn_(x, par))
@@ -130,12 +133,12 @@ DetFn <- R6Class("DetFn",
       }
       invisible(list(par, h, xlim, ylim, xname, yname, main, ...))
     }
-    
   ), 
   
   private = list(
     parameters_ = NULL, 
-    fn_ = NULL, 
+    fn_ = NULL,
+    fnname_ = NULL,
     prob_ = NULL, 
     link2response_ = NULL, 
     response2link_ = NULL
