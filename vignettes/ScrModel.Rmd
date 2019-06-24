@@ -305,7 +305,7 @@ start <- get_start_values(scrdat)
 ```
 ```{r statscrmake, eval = FALSE}
 # create model object 
-stat <- ScrModel$new(stat_form, scrtransdat, start, num_cores = 4)
+stat <- ScrModel$new(stat_form, scrtransdat, start)
 # fit model 
 stat$fit()
 ```
@@ -336,7 +336,7 @@ form <- list(lambda0 ~ 1,
 start <- get_start_values(scrtransdat, model = "ScrTransientModel")
 ```
 ```{r transmodmake, eval = FALSE}
-trans <- ScrTransientModel$new(form, scrtransdat, start, num_cores = 4)
+trans <- ScrTransientModel$new(form, scrtransdat, start)
 ```
 
 Notice that you must specify <code>model = "ScrTransientModel"</code> in 
