@@ -18,6 +18,7 @@ object. Object can be created using $new with arguments:
     (used for irregularly spaced occasions). Default is vector of ones.
   \item cov: a list of covariate (for detector and occasion)
   \item cov_type: type of covariate (j = detector cov, k = occasion cov, jk = detector+occasion,)
+  \item primary: vector with index for each occasion in capthist that pools occasions into primary occasions 
        
 }
 

@@ -2,9 +2,9 @@
 % Please edit documentation in R/RcppExports.R
 \name{C_calc_llk}
 \alias{C_calc_llk}
-\title{Computes log-likelihood of Jolly-Seber model}
+\title{Computes log-likelihood}
 \usage{
-C_calc_llk(n, J, M, pr0, pr_capture, tpms, num_cores, num_states, entry)
+C_calc_llk(n, J, M, pr0, pr_capture, tpms, num_states, entry)
 }
 \arguments{
 \item{n}{number of individuals}
@@ -19,13 +19,11 @@ C_calc_llk(n, J, M, pr0, pr_capture, tpms, num_cores, num_states, entry)
 
 \item{tpms}{output of calc_tpms() in JsModel}
 
-\item{num_cores}{number of processor cores to use in parallelisation}
-
 \item{num_states}{2 = CJS model, 3 = JS model}
 }
 \value{
 log-likelihood value
 }
 \description{
-Computes log-likelihood of Jolly-Seber model
+Computes log-likelihood
 }

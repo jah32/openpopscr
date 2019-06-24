@@ -15,8 +15,6 @@ simulates from fitted model.
   \item form: a named list of formulae for each parameter (~1 for constant)
   \item scr_data: a ScrData object 
   \item start: a named list of starting values 
-  \item num_cores (optional, default = 1): number of processors cores to use 
-  in parallelised code 
   \item print (default = TRUE): if TRUE then helpful output is printed
 }
 

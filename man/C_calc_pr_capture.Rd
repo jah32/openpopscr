@@ -2,10 +2,10 @@
 % Please edit documentation in R/RcppExports.R
 \name{C_calc_pr_capture}
 \alias{C_calc_pr_capture}
-\title{Computes probability of each capture record for Jolly-Seber model}
+\title{Computes probability of each capture record}
 \usage{
-C_calc_pr_capture(n, J, K, M, capvec, enc_rate, usage, num_cores,
-  num_states, detector_type)
+C_calc_pr_capture(n, J, K, M, capthist, enc0, usage, num_states,
+  detector_type, n_prim, S, entry)
 }
 \arguments{
 \item{n}{number of individuals}
@@ -16,21 +16,19 @@ C_calc_pr_capture(n, J, K, M, capvec, enc_rate, usage, num_cores,
 
 \item{M}{total number of mesh points}
 
+\item{usage}{matrix with J x K where (j,k) entry is usage of trap k in occasion j}
+
+\item{detector_type}{1 = count, 2 = proximity/binary, 3 = multi-catch, 4 = transect}
+
 \item{capvec}{a pointer to the capthist array}
 
 \item{enc_rate}{a pointer to the encounter rate array, see calc_pr_capture() in JsModel}
 
-\item{usage}{matrix with J x K where (j,k) entry is usage of trap k in occasion j}
-
-\item{num_cores}{number of processor cores to use in parallelisation}
-
-\item{detector_type}{1 = count, 2 = proximity/binary, 3 = multi-catch}
-
-\item{num_states:}{2 = CJS model, 3 = JS model}
+\item{num_states:}{1 = SCR model, 2 = CJS model, 3 = JS model}
 }
 \value{
 Array with (i,j,m) entry the probability of capture record for individual i in occasion j given activity centre at mesh point m
 }
 \description{
-Computes probability of each capture record for Jolly-Seber model
+Computes probability of each capture record
 }

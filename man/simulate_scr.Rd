@@ -4,8 +4,8 @@
 \alias{simulate_scr}
 \title{Simulate Spatial Capture-Recapture data}
 \usage{
-simulate_scr(par, n_occasions, detectors, mesh, move = FALSE,
-  time = NULL, seed = NULL, print = TRUE)
+simulate_scr(par, n_occasions, detectors, mesh, ihp = NULL,
+  move = FALSE, time = NULL, seed = NULL, print = TRUE)
 }
 \arguments{
 \item{n_occasions}{number of occasions to simulate}

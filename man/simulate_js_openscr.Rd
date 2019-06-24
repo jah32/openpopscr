@@ -4,8 +4,9 @@
 \alias{simulate_js_openscr}
 \title{Simulate SCR open population Jolly-Seber survey}
 \usage{
-simulate_js_openscr(par, n_occasions, detectors, mesh, move = FALSE,
-  time = NULL, seed = NULL, print = TRUE)
+simulate_js_openscr(par, n_occasions, detectors, mesh, ihp = NULL,
+  move = FALSE, time = NULL, primary = NULL, seed = NULL,
+  print = TRUE)
 }
 \arguments{
 \item{par}{true parameters, named list of lambda0, sigma, phi, beta}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{C_calc_pdet}
 \alias{C_calc_pdet}
-\title{Computes detection probability (seen at least once) for Jolly-Seber model}
+\title{Computes detection probability (seen at least once)}
 \usage{
 C_calc_pdet(J, pr0, pr_captures, tpms, num_states)
 }
@@ -19,5 +19,5 @@ C_calc_pdet(J, pr0, pr_captures, tpms, num_states)
 pdet = probability seen at some time on the survey
 }
 \description{
-Computes detection probability (seen at least once) for Jolly-Seber model
+Computes detection probability (seen at least once)
 }

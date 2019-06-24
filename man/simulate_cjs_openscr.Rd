@@ -5,7 +5,7 @@
 \title{Simulate SCR open population Cormack-Jolly-Seber survey}
 \usage{
 simulate_cjs_openscr(par, N, n_occasions, detectors, mesh, move = FALSE,
-  time = NULL, seed = NULL, print = TRUE)
+  time = NULL, primary = NULL, seed = NULL, print = TRUE)
 }
 \arguments{
 \item{N}{number of individuals}
@@ -19,6 +19,8 @@ simulate_cjs_openscr(par, N, n_occasions, detectors, mesh, move = FALSE,
 \item{move}{if TRUE then activity centres move and true_par$sd must be specified}
 
 \item{time}{vector with time units between occasions}
+
+\item{primary}{index of primary periods that each occasion belongs to (default is 1 primary period)}
 
 \item{seed}{seed to set before simulating}
 
