@@ -308,7 +308,16 @@ JsModel <- R6Class("JsModel",
   
   simulate = function(seed = NULL) {
     if (!is.null(seed)) set.seed(seed)
-    new_dat <- simulate_js_openscr(self$par(), 
+    if(private$detfn_$fn_name() != "HHN")stop("Only simulates for an HHN detection function")
+    if(private$data_$n_primary() != 1)stop(
+      "Simulate directly. Primary not currently supported inside object.")
+    par <- list()
+    par$sigma <- self$get_par("sigma", j = 1, m = 1)
+    par$lambda0 <- self$get_par("lambda0", j = 1, m = 1)
+    par$D <- self$get_par("D")
+    par$phi <- self$get_par("phi", j = 1, m = 1)
+    par$beta <- self$get_par("beta", j = 1, m = 1)
+    new_dat <- simulate_js_openscr(par = par, 
                                    self$data()$n_occasions(), 
                                    self$data()$traps(), 
                                    self$data()$mesh(), 
