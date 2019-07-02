@@ -281,11 +281,11 @@ ScrModel <- R6Class("ScrModel",
     
     simulate = function(seed = NULL) {
       if (!is.null(seed)) set.seed(seed)
-      if(private$detfn_$fn_name() != "HHN")return("Error")
+      if(private$detfn_$fn_name() != "HHN")stop("Only simulates for an HHN detection function")
       par <- list()
-      par$sigma<- self$get_par("sigma", j=1)
-      par$lambda0<-self$get_par("lambda0", j=1)
-      par$D<-self$get_par("D")
+      par$sigma <- self$get_par("sigma", j = 1, m = 1)
+      par$lambda0 <- self$get_par("lambda0", j = 1, m = 1)
+      par$D <- self$get_par("D")
       new_dat <- simulate_scr(par = par, 
                               n_occasions = self$data()$n_occasions(), 
                               detectors = self$data()$traps(), 
@@ -415,3 +415,5 @@ ScrModel <- R6Class("ScrModel",
 )
 
 
+
+#t(sapply(1:self$data()$n_occasions(), function(k)self$get_par("lambda0", j=1:self$data()$n_traps(), k)))
