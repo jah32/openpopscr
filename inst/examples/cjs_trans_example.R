@@ -48,7 +48,7 @@ obj$fit()
 
 obj
 
-obj$get_par("lambda0", k = 1)
-obj$get_par("sigma", k = 1)
-obj$get_par("phi", k = 1)
-obj$get_par("sd", k = 1)
+obj$get_par("lambda0", k = 1, m = 1)
+obj$get_par("sigma", k = 1, m = 1)
+obj$get_par("phi", k = 1, m = 1)
+obj$get_par("sd", k = 1, m = 1)
