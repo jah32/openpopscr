@@ -4,7 +4,7 @@ activity centre movement by maximum likelihood.
 
 ## Install 
 
-In R, the latest release can be install using the <code>devtools</code> package
+In R, the latest release can be installed using the <code>devtools</code> package
 with the command: 
 
 ```
