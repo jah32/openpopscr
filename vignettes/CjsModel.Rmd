@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The CjsModel class is a [<code>R6</code> class](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
+The CjsModel class is a [<code>R6</code> class](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain all the information and methods related to them. 
 
 In this vignette, I describe how Cormack-Jolly-Seber (CJS) spatial capture-recapture (SCR) models can be used within an <code>R6</code> object of the <code>CjsModel</code> class. I recommend you read
 the vignettes on the ScrData and ScrModel classes before reading this one. 
@@ -122,7 +122,7 @@ If you have the output printed, the "checking convergence" message reports
 whether convergence has been reached and if it has not it reports the code
 output by <code>optim</code> that tells you why it failed to converge. 
 
-# Reading model output 
+## Reading model output 
 
 Once a model has been fit, you can type its name into the console and some
 summary results are printed: 
@@ -132,9 +132,9 @@ mod
 
 The parameters are reported on the link scale; this is because when covariates
 are involved, it is easier to interpret their effects. The package <code>openpopscr</code>
-uses the log-link function for all of these parameters. So, you would take
+uses the log-link function for all of the parameters except phi, which uses the logit-link function. So, you would take
 the exponential of these reported numbers to obtain the parameter values on the
-response scale. 
+response scale. To obtain the value for phi on the response scale, use the <code>plogis</code> function in R.
 
 Alternatively, you can use the <code>get_par</code> function: 
 ```{r getpar}
@@ -205,14 +205,14 @@ entire range during each occasion, so the range within each occasion is only
 partial; or, it may be that an individual does explore their entire range
 during each occasion, but the range shifts over time. 
 
-For Cjs models, transience can play an important role. When individuals are transient,
+For CJS models, transience can play an important role. When individuals are transient,
 their activity can pass in and out of range of detection; individuals that permanently
 pass out of range of detection are best explained, by the CjsModel, as having died
 and so survival probability is underestimated. This forces one to estimate only
 apparent survival, not true survival. When transience is accounted for, one can
 more defendably state that they have estimated true survival. 
 
-You can simulate Cjs SCR surveys with transience: 
+You can simulate CJS SCR surveys with transience: 
 ```{r cjstrans, eval = FALSE}
 # set truth 
 true_par <- list(lambda0 = 2, sigma = 20, phi = 0.7, sd = 20)

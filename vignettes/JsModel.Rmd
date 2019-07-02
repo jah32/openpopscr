@@ -18,9 +18,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-The JsModel class is a [<code>R6</code> class](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
+The JsModel class is a [<code>R6</code> class](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain all the information and methods related to them. 
 
-In this vignette, I describe how Jolly-Seber (Js) spatial capture-recapture (SCR) models can be used within an <code>R6</code> object of the <code>JsModel</code> class. The JS model is formulated
+In this vignette, I describe how Jolly-Seber (JS) spatial capture-recapture (SCR) models can be used within an <code>R6</code> object of the <code>JsModel</code> class. The JS model is formulated
 according to the Schwarz-Arnason parameterisation. I recommend you read
 the vignettes on the ScrData and ScrModel classes before reading this one. 
 
@@ -43,7 +43,7 @@ scrtransdat <- jsmodel_example$scrtransdat
 The <code>openpopscr</code> package uses the <code>ScrData</code> class to store data. See the vignette on the <code>ScrData</code> class to see how to create the data object from your own raw data. In this section, I simulate a Js SCR survey. The simulation function is useful when you want to try out a new method where you know what the correct parameter estimates are, you want to test how robust a method is to violations of its assumptions, or you want to see how data simulated from a model compare with real data.
 
 To simulate a survey, I require true detection, survival parameters, and recruitment parameters, a detector layout, and a mesh. The specified value of <code>beta</code> is the proportion of the 
-super-population (those ever to have lived) to be a live in the first occasion. 
+super-population (those ever to have lived) to be alive in the first occasion. 
 
 ```{r setuptruepar}
 # set true parameters 
@@ -82,7 +82,7 @@ values for all parameters. It is best to choose starting values for the
 parameters that are biologically reasonable and match your data. You could
 simulate some data using proposed starting values as true parameters to see if
 they lead to similar data. Poor starting values can lead to spurious convergence
-in complicated models, models with many parameters. The function
+in complicated models, i.e. models with many parameters. The function
 <code>get_start_value</code> can be used to produce a reasonable guess for each
 parameter.
 
@@ -117,7 +117,7 @@ If you have the output printed, the "checking convergence" message reports
 whether convergence has been reached and if it has not it reports the code
 output by <code>optim</code> that tells you why it failed to converge. 
 
-# Reading model output 
+## Reading model output 
 
 Once a model has been fit, you can type its name into the console and some
 summary results are printed: 
@@ -127,9 +127,9 @@ mod
 
 The parameters are reported on the link scale; this is because when covariates
 are involved, it is easier to interpret their effects. The package <code>openpopscr</code>
-uses the log-link function for all of these parameters. So, you would take
+uses the log-link function for the lambda0 and sigma parameters and sd, if applicable. So, you would take
 the exponential of these reported numbers to obtain the parameter values on the
-response scale. 
+response scale. The beta and phi parameters use the logit-link function so you would use the <code>plogis</code> command in R to obtain parameter values on the response scale.
 
 Alternatively, you can use the <code>get_par</code> function: 
 ```{r getpar}
@@ -184,7 +184,7 @@ mod_seas$fit()
 ```{r survtsee}
 # look at results
 mod_seas
-# predict beta for each season
+# predict beta for each occasion
 cbind(season, mod_seas$get_par("beta"))
 ```
 
@@ -196,18 +196,14 @@ loading covariates into the ScrData object and fitting models with covariates.
 
 Sometimes an individual's activity range within each occasion differs from
 their range when viewed across all occasions. There can be several reasons
-for this; two common reasons are that the individual only explores part of their
+for this. Two common reasons are: the individual only explores part of their
 entire range during each occasion, so the range within each occasion is only
 partial; or, it may be that an individual does explore their entire range
 during each occasion, but the range shifts over time. 
 
-For JS models, transience can play an important role. When individuals are transient,
-their activity can pass in and out of range of detection; individuals that permanently
-pass out of range of detection are best explained, by the JSModel, as having died
-and so survival probability is underestimated. Furthermore, transience can cause 
-overestimation of detection probability and substantial underestimation of density. 
+For JS models, transience can play an important role. When individuals are transient, their activity can pass in and out of range of detection; individuals that permanently pass out of range of detection are best explained, by the JSModel, as having died and so survival probability is underestimated. Furthermore, transience can cause overestimation of detection probability and substantial underestimation of density. 
 
-You can simulate Js SCR surveys with transience: 
+You can simulate JS SCR surveys with transience: 
 ```{r jstrans, eval = FALSE}
 # set truth 
 true_par <- list(D = 1000, lambda0 = 2, sigma = 10, phi = 0.8, beta = 0.2, sd = 20)

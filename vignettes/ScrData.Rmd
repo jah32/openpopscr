@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The ScrData class is an [<code>R6</code> class](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
+The ScrData class is an [<code>R6 class</code> ](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects, which have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain all the information and methods related to them. 
 
 In this vignette, I describe how spatial capture-recapture data can be stored within an <code>R6</code> object of the <code>ScrData</code> class. 
 
@@ -29,7 +29,7 @@ library(secr)
 
 ## Raw data 
 
-The [<code>secr</code> package](https://cran.r-project.org/package=secr) contains the functions <code>read.traps</code>, <code>make.capthist</code>, and <code>make.mask</code>. They can be used to convert raw data often collected in SCR surveys into a capthist object and mask object. These functions are available in the <code>openpopscr</code> package also. 
+The [<code>secr</code>](https://cran.r-project.org/package=secr) package contains the functions <code>read.traps</code>, <code>make.capthist</code>, and <code>make.mask</code>. They can be used to convert raw data often collected in SCR surveys into a capthist object and mask object. These functions are available in the <code>openpopscr</code> package also. 
 
 On a side note, I call the mask object a mesh. The terms are interchangeable. 
 
@@ -55,7 +55,7 @@ The <code>read.traps</code> function will take a data frame with x, y coordinate
  then the traps are called "multi" type.  
  
 ```{r make_traps}
- detectors <- read.traps(data = traps, detector = "proximity")
+detectors <- read.traps(data = traps, detector = "proximity")
 ```
 
 The <code>make.capthist</code> function creates the capthist object. 
@@ -69,6 +69,8 @@ This data does not have a custom mesh, so I create one using <code>make.mask</co
 ```{r make_mask}
 mesh <- make.mask(detectors)
 ```
+
+If you do not know how to construct a mesh using the make.mask function, please read the [help file](https://www.otago.ac.nz/density/pdfs/secr-habitatmasks.pdf) from the secr package website. Similarly, help on how to input capture and trap data can be found here: https://www.otago.ac.nz/density/pdfs/secr-datainput.pdf.
 
 ## A simple ScrData object 
 
@@ -136,10 +138,10 @@ duration $1$.
 The ScrData object can handle three kinds of covariates: detector-specific, temporal, or both. 
 
 Detector-specific covariates are called $j$ type covariates, because $j$ is typically the mathematical index used for detectors. 
-Suppose there is a variable $x$ that could affect how detectors operate. I create an imaginary variable here: 
+Suppose there is a variable $z$ that could affect how detectors operate. I create an imaginary variable here: 
 
-```{r x_cov}
-x <- factor(sample(c("bad", "good"), size = nrow(detectors), replace = TRUE))
+```{r z_cov}
+z <- factor(sample(c("bad", "good"), size = nrow(detectors), replace = TRUE))
 ```
 
 This is a factor variable that labels each detector as a "good" or "bad" detector. 
@@ -147,7 +149,7 @@ This is a factor variable that labels each detector as a "good" or "bad" detecto
 The covariate can be included when creating the ScrData object: 
 
 ```{r cov_make_scrdata, eval = FALSE}
-scrdat <- ScrData$new(capthist, mesh, cov = list(x = x), cov_type = c("j"))
+scrdat <- ScrData$new(capthist, mesh, cov = list(z = z), cov_type = c("j"))
 ```
 
 The <code>cov</code> argument must be a list with each covariate named. The <code>cov_type</code> argument specifies the type of each covariate; it must be ordered in the same way as the <code>cov</code> argument. 
@@ -155,7 +157,7 @@ The <code>cov</code> argument must be a list with each covariate named. The <cod
 Alternatively, the covariate can be added to the ScrData object after it has been created using the <code>add_covariate</code> function:
 
 ```{r add_cov}
-scrdat$add_covariate("x", x, "j")
+scrdat$add_covariate("z", z, "j")
 ```
 
 The <code>add_covariate</code> function requires the covariate name, the covariate data frame itself, and the covariate type. 
@@ -173,12 +175,16 @@ Notice, that the covariate $t$ is automatically created; it is the index of each
 Covariates can be subset by detector or time: 
 ```{r subsetcov}
 # get covariates for all detectors on occasion 2
-scrdat$covs(k = 2)
+scrdat$covs(k = 2, m = 1)     
+
 # get covariates for detector 7 on all occasions 
-scrdat$covs(j = 7)
+scrdat$covs(j = 7, m = 1)     
+
 # get covariates for detector 5 on occasion 3 
-scrdat$covs(j = 5, k = 3)
+scrdat$covs(j = 5, k = 3, m = 1)     
+
 # get covariates for detectors 1 to 10 on occasions 3 and 5
-scrdat$covs(j = 1:10, k = c(3, 5))
+scrdat$covs(j = 1:10, k = c(3, 5), m = 1)
 ```
 
+Note that m=1 is included in the function. If this is not included, the function returns the x and y coordinates for every mesh point. 

@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The ScrModel class is a [<code>R6</code> class](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
+The ScrModel class is an [<code>R6 class</code> ](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain within them all the information and methods related to them. 
 
 In this vignette, I describe how spatial capture-recapture models can be used within an <code>R6</code> object of the <code>ScrModel</code> class. 
 
@@ -81,7 +81,7 @@ scrdat
  
 ## Fitting a model 
 
-Models of class <code>ScrModel</code> can be used to fit SCR Models, no surprises. To create a ScrModel, you need to specify a formula for each detection parameter and a starting value for all parameters, both as lists. It is best to choose starting values for the parameters that are biologically reasonable and 
+Models of class <code>ScrModel</code> can be used to fit SCR Models. To create a ScrModel, you need to specify a formula for each detection parameter and a starting value for all parameters, both as lists. It is best to choose starting values for the parameters that are biologically reasonable and 
 match your data. You could simulate some data using proposed starting values as true parameters to 
 see if they lead to similar data. Poor starting values can lead to spurious convergence 
 in complicated models, models with many parameters. The function <code>get_start_value</code> can
@@ -109,21 +109,6 @@ Before fitting the model, I create the model object:
 mod <- ScrModel$new(form, scrdat, start)
 ```
 
-I have specified here for the model to use $4$ processor cores for any parallel
-processing. This makes model fitting and computations quicker. You can 
-use the package <code>Parallel</code> to find out how many processor cores
-you have available: 
-```{r cores}
-library(parallel)
-detectCores()
-```
-
-In my case, I have eight cores. In general, I would use at most one core
-less than what I had available, to leave one core free for me to use. In this
-case, I have left half of them free because I am using them for another purpose.
-You can set many models to use the same cores as long as only one is being
-used to do computations at a time. 
-
 Once the model object has been created, you can fit the model using the fit
 function:
 ```{r fitmodel, eval = FALSE}
@@ -150,7 +135,7 @@ converge because it has reached the maximum number of iterations in the algorith
 If this occurs, simply call <code>fit()</code> again and the optimiser will
 continue where it left off. 
 
-# Reading model output 
+## Reading model output 
 
 Once a model has been fit, you can type its name into the console and some
 summary results are printed: 
