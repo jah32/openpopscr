@@ -35,6 +35,8 @@ start <- list(lambda0 = 2,
               phi = 0.5, 
               D = 1000)
 
+#or alternatively
+start <- get_start_values(scrdat, "JsModel")
 
 oo <- JsModel$new(par, scrdat, start)
 
