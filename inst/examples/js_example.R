@@ -1,6 +1,7 @@
 ## Jolly-Seber example 
 library(openpopscr)
 library(secr)
+RcppParallel::setThreadOptions(numThreads = 7)
 
 # simulate data -----------------------------------------------------------
 

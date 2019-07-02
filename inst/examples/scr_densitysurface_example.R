@@ -1,8 +1,7 @@
 # SCR density surface example 
 library(openpopscr)
 library(secr)
-RcppParallel::setThreadOptions(numThreads = 1)
-
+RcppParallel::setThreadOptions(numThreads = 7)
 # simulate data -----------------------------------------------------------
 
 # set truth 

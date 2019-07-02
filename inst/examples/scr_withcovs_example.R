@@ -1,7 +1,7 @@
 # SCR example 
 library(openpopscr)
 library(secr)
-
+RcppParallel::setThreadOptions(numThreads = 7)
 
 # simulate data -----------------------------------------------------------
 
@@ -65,7 +65,7 @@ start <- list(lambda0 = 2,
 obj <- ScrModel$new(form, scrdat, start)
 
 # compute initial likelihood 
-#obj$calc_llk()
+obj$calc_llk()
 
 # fit model
 obj$fit()
