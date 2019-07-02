@@ -28,8 +28,11 @@ simulate_scr <- function(par, n_occasions, detectors, mesh, ihp = NULL, move = F
   if (print) cat("Simulating population and activity centres.......")
   pop <- sim.popn(D = D, core = mesh, model2D = model2D, Ndist = "poisson", buffertype = "rect")
   if (print) cat("done\n")
+  #Lines below unnecessary
   dt <- rep(1, n_occasions - 1)
   if (!is.null(time))  dt <- diff(time)
+  #instead
+  dt <- diff(time)
   # generate capture histories
   lambda0 <- par$lambda0
   sigma <- par$sigma
@@ -141,8 +144,11 @@ simulate_cjs_openscr <- function(par, N, n_occasions, detectors, mesh,  move = F
       life[,k] <- life[,k-1]
     }
   }
-  dt <- rep(1, n_occasions - 1)
-  if (!is.null(time))  dt <- diff(time)
+  #Replace the two lines below?
+  #dt <- rep(1, n_occasions - 1)
+  #if (!is.null(time))  dt <- diff(time)
+  #Suggested Replacement:
+  dt <- diff(time)
   lambda0 <- par$lambda0
   sigma <- par$sigma
   nocc <- n_occasions
@@ -289,8 +295,9 @@ simulate_js_openscr <- function(par, n_occasions, detectors, mesh, ihp = NULL, m
     }
     life[birth_time == k, k] <- 1
   }
-  dt <- rep(1, n_occasions - 1)
-  if (!is.null(time))  dt <- diff(time)
+  #Lines with dt below not necessary? Already defined earlier
+  #dt <- rep(1, n_occasions - 1)
+  #if (!is.null(time))  dt <- diff(time)
   lambda0 <- par$lambda0
   sigma <- par$sigma
   nocc <- n_occasions
