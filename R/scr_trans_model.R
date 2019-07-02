@@ -174,9 +174,26 @@ ScrTransientModel <- R6Class("ScrTransientModel",
       cat("llk:", llk, "\n")
       return(llk)
     },
-    
+  #simulate is very complicated. Change to simulate_scr(..., move=TRUE)?  
   simulate = function(seed = NULL) {
     if (!is.null(seed)) set.seed(seed)
+    #new code
+    if(private$detfn_$fn_name() != "HHN")stop("Only simulates for an HHN detection function")
+    par <- list()
+    par$sigma <- self$get_par("sigma", j = 1, k = 1, m = 1)
+    par$lambda0 <-self$get_par("lambda0", j = 1, k = 1,  m = 1)
+    par$D <- self$get_par("D")
+    par$sd <- self$get_par("sd", j = 1, m = 1)
+    new_dat <- simulate_scr(par = par, 
+                            n_occasions = self$data()$n_occasions(), 
+                            detectors = self$data()$traps(), 
+                            mesh = self$data()$mesh(), 
+                            time = self$data()$time(), 
+                            seed = seed, 
+                            print = private$print_, move = TRUE)
+    return(new_dat)
+    
+    #original code
     num.meshpts <- private$data_$n_meshpts()
     mesh <- private$data_$mesh()
     D <- do.call(private$link2response_$D, list(self$par()$D)) / 100
