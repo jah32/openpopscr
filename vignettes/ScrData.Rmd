@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The ScrData class is an [<code>R6 class</code> ](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects, which have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain all the information and methods related to them. 
+The ScrData class is an [<code>R6 class</code>](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects, which have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain all the information and methods related to them. 
 
 In this vignette, I describe how spatial capture-recapture data can be stored within an <code>R6</code> object of the <code>ScrData</code> class. 
 
@@ -48,11 +48,12 @@ str(captures)
 str(traps)
 ```
 
-The <code>read.traps</code> function will take a data frame with x, y coordinates for each detector and create
+The <code>read.traps</code> function takes a data frame with x, y coordinates for each detector and creates
  the traps object. The detector type here is "proximity" because DNA hair traps only record whether the stoat 
  was detected or not by the trap, not how many times it was detected (that would be a "count" type detector). Also, with proximity detectors it is possible for a single individual to be
  detected on more than one trap during a single occasion; if this is not the case,
- then the traps are called "multi" type.  
+ then the traps are called "multi" type. <code>openpopscr</code> does
+not implement methods for traps that can detect only one individual per occasion, termed single catch traps.
  
 ```{r make_traps}
 detectors <- read.traps(data = traps, detector = "proximity")
@@ -65,12 +66,12 @@ capthist <- make.capthist(captures, detectors)
 ```
 
 
-This data does not have a custom mesh, so I create one using <code>make.mask</code>: 
+The data object requires a mesh. This data does not have a custom mesh, so I create one using <code>make.mask</code>: 
 ```{r make_mask}
 mesh <- make.mask(detectors)
 ```
 
-If you do not know how to construct a mesh using the make.mask function, please read the [help file](https://www.otago.ac.nz/density/pdfs/secr-habitatmasks.pdf) from the secr package website. Similarly, help on how to input capture and trap data can be found here: https://www.otago.ac.nz/density/pdfs/secr-datainput.pdf.
+If you do not know how to construct a mesh using the make.mask function, please read the [help file](https://www.otago.ac.nz/density/pdfs/secr-habitatmasks.pdf) from the secr package website. Similarly, a [help file](https://www.otago.ac.nz/density/pdfs/secr-datainput.pdf) on how to input the capture and trap data may also be useful. 
 
 ## A simple ScrData object 
 
@@ -110,7 +111,7 @@ dist <- scrdat$distances()
 head(dist[1,])
 ```
 
-One thing to note is the <code>area</code> function, it returns the area in square kilometres, not hectares, the standard unit of area for the <code>secr</code> package. 
+One thing to note is that the <code>area</code> function returns the area in square kilometres, not hectares. Hectares are the standard unit of area for the <code>secr</code> package. 
 
 ## Time 
 
@@ -170,7 +171,7 @@ Once covariates have been included, you can extract the covariates for any parti
 scrdat$covs()
 ```
 
-Notice, that the covariate $t$ is automatically created; it is the index of each occasion. 
+Notice that the covariate $t$ is automatically created; it is the index of each occasion. 
 
 Covariates can be subset by detector or time: 
 ```{r subsetcov}
@@ -187,4 +188,4 @@ scrdat$covs(j = 5, k = 3, m = 1)
 scrdat$covs(j = 1:10, k = c(3, 5), m = 1)
 ```
 
-Note that m=1 is included in the function. If this is not included, the function returns the x and y coordinates for every mesh point. 
+Notice that m=1 is included in the function. If this is not included, the function returns the x and y coordinates for every mesh-point. 

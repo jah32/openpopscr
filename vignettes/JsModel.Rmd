@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The JsModel class is a [<code>R6</code> class](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain all the information and methods related to them. 
+The JsModel class is an [<code>R6 class</code>](https://r6.r-lib.org/articles/Introduction.html). <code>R6 classes</code> are used to create objects. Objects can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain all the information and methods related to them. 
 
 In this vignette, I describe how Jolly-Seber (JS) spatial capture-recapture (SCR) models can be used within an <code>R6</code> object of the <code>JsModel</code> class. The JS model is formulated
 according to the Schwarz-Arnason parameterisation. I recommend you read
@@ -40,9 +40,9 @@ scrtransdat <- jsmodel_example$scrtransdat
 
 ## Simulating data 
 
-The <code>openpopscr</code> package uses the <code>ScrData</code> class to store data. See the vignette on the <code>ScrData</code> class to see how to create the data object from your own raw data. In this section, I simulate a Js SCR survey. The simulation function is useful when you want to try out a new method where you know what the correct parameter estimates are, you want to test how robust a method is to violations of its assumptions, or you want to see how data simulated from a model compare with real data.
+The <code>openpopscr</code> package uses the <code>ScrData</code> class to store data. See the vignette on the <code>ScrData</code> class to see how to create the data object from your own raw data. In this section, I simulate a JS SCR survey. The simulation function is useful when you want to try out a new method where you know what the correct parameter estimates are, you want to test how robust a method is to violations of its assumptions, or you want to see how data simulated from a model compare with real data.
 
-To simulate a survey, I require true detection, survival parameters, and recruitment parameters, a detector layout, and a mesh. The specified value of <code>beta</code> is the proportion of the 
+To simulate a survey, I require: true detection, survival and recruitment parameters; a detector layout; and a mesh. The specified value of <code>beta</code> is the proportion of the 
 super-population (those ever to have lived) to be alive in the first occasion. 
 
 ```{r setuptruepar}
@@ -76,8 +76,8 @@ scrdat
  
 ## Fitting a model 
 
-To create a JsModel, you need to specify a formula for each detection parameter
-the survival parameter, and the recruitment parameter; also, you need starting
+To create a JsModel, you need to specify a formula for each detection parameter,
+the survival parameter, and the recruitment parameter. Also, you need starting
 values for all parameters. It is best to choose starting values for the
 parameters that are biologically reasonable and match your data. You could
 simulate some data using proposed starting values as true parameters to see if
@@ -119,7 +119,7 @@ output by <code>optim</code> that tells you why it failed to converge.
 
 ## Reading model output 
 
-Once a model has been fit, you can type its name into the console and some
+Once a model has been fitted, you can type its name into the console and some
 summary results are printed: 
 ```{r printres}
 mod
@@ -174,7 +174,7 @@ season <- as.factor(sample(c("wet", "dry"), size = scrdat$n_occasions(), replace
 scrdat$add_covariate("season", season, "k")
 # copy formulae from previous model
 form_seas <- form
-# update formula for lambda0 to include age 
+# update formula for beta to include season
 form_seas[[4]]<- beta ~ season
 # create new model object 
 mod_seas <- JsModel$new(form_seas, scrdat, start)
@@ -201,7 +201,7 @@ entire range during each occasion, so the range within each occasion is only
 partial; or, it may be that an individual does explore their entire range
 during each occasion, but the range shifts over time. 
 
-For JS models, transience can play an important role. When individuals are transient, their activity can pass in and out of range of detection; individuals that permanently pass out of range of detection are best explained, by the JSModel, as having died and so survival probability is underestimated. Furthermore, transience can cause overestimation of detection probability and substantial underestimation of density. 
+For JS models, transience can play an important role. When individuals are transient, their activity can pass in and out of range of detection. Individuals that permanently pass out of range of detection are best explained, by the JSModel, as having died and so survival probability is underestimated. Furthermore, transience can cause overestimation of detection probability and substantial underestimation of density. 
 
 You can simulate JS SCR surveys with transience: 
 ```{r jstrans, eval = FALSE}
@@ -219,14 +219,14 @@ scrtransdat <- simulate_js_openscr(true_par, n_occasions, detectors, mesh, move 
 
 
 For a given dataset, you can investigate whether transience may be a problem by
-looking how the encounter range statistic (see RPSV function in secr package for
+looking at how the encounter range statistic (see RPSV function in secr package for
 details) compares over occasions as opposed to within occasions:
 ```{r stattrans}
 scrtransdat$encrange()
 mean(scrtransdat$encrange(each = TRUE))
 ```
 
-There is some difference between the two measure of encounter range, where 
+There is some difference between the two measures of encounter range, where 
 range across occasions is greater than range within, indicative of transience. 
 
 Nevertheless, I will first fit a stationary JSModel to these data: 
@@ -251,7 +251,7 @@ stat$get_par("D")
 ```
 
 I now fit the transient model. The transient model class is called
-<code>JsTransientModel</code>. We must also now specify a start value for the
+<code>JsTransientModel</code>. We must also now specify a start value and a formula for the
 movement parameter.
 
 ```{r fittransmod, eval = FALSE}
@@ -285,3 +285,6 @@ trans$get_par("beta", k = 1)
 trans$get_par("D")
 ```
 
+## Robust Design
+In a robust design, there are both primary and secondary occasions for sampling. Secondary occasions take place close together in time and it is assumed the population is closed between them. Population gains(births) and losses(deaths) occur between primary occasions, which take place at greater intervals. The survival parameter and recruitment parameters between primary occasions are of interest.
+An example of a robust design is included js_robust_example.R

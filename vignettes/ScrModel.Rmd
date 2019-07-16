@@ -57,9 +57,9 @@ mesh <- make.mask(detectors, buffer = 100, nx = 64, ny = 64, type = "trapbuffer"
 n_occasions <- 5 
 ```
 
-The simulation uses a hazard half-normal detection function as defined in Borchers and Efford (2008). This detection function has two parameters: $\lambda_0$ and $\sigma$. Together they define the encounter rate between an individual with activity centre a distance $r$ from a detector as $\lambda_0\exp(-\frac{r^2}{2\sigma^2})$. If the encounter rate is $e$, then $Te$ is the mean number of encounters one would expect in a time interval of duration $T$. This means that $\lambda_0$ is the encounter rate between an individual and a detector when the distance between the detector and the individual's activity centre is zero, it is a kind of intercept. The parameter $\sigma$ is the scale parameter that determines how quickly the encounter rate decreases as the distance between detector and activity centre increases. 
+The simulation uses a hazard half-normal detection function as defined in Borchers and Efford (2008). This detection function has two parameters: $\lambda_0$ and $\sigma$. Together they define the encounter rate between an individual and a detector as $\lambda_0\exp(-\frac{r^2}{2\sigma^2})$, where the individual has an activity centre a distance $r$ from the detector. If the encounter rate is $e$, then $Te$ is the mean number of encounters one would expect in a time interval of duration $T$. This means that $\lambda_0$ is the encounter rate between an individual and a detector when the distance between the detector and the individual's activity centre is zero; it is a kind of intercept. The parameter $\sigma$ is the scale parameter, which determines how quickly the encounter rate decreases as the distance between detector and activity centre increases. 
 
-I have specified the detectors to be of type "count". This means that each detector records how many times each individual was seen by that detector. An alternative detector type is "proximity"; these detectors only record whether an individual was seen at least once or not. Camera traps are examples of count detectors; they can be used to determine whether an individual was seen once, twice, thrice, and so on. DNA hair snares are examples of proximity detectors; one can only determine whether an individual's DNA is present or not, you cannot determine how many times the individual deposited hair. Multi-catch
+I have specified the detectors to be of type "count". This means that each detector records how many times each individual was seen by that detector. An alternative detector type is "proximity". These detectors only record whether an individual was seen at least once or not. Camera traps are examples of count detectors; they can be used to determine whether an individual was seen once, twice, thrice, and so on. DNA hair snares are examples of proximity detectors; one can only determine whether an individual's DNA is present or not, but you cannot determine how many times the individual deposited hair. Multi-catch
 detectors can also be used where individuals may only be detected on a single detector 
 for each occasion, but a detector can detect multiple individuals. <code>openpopscr</code> does
 not implement methods for traps that can detect only one individual per occasion, termed single catch traps. 
@@ -89,7 +89,7 @@ be used to produce a reasonable guess for each parameter.
 
 ```{r setupscrmod}
 
-# set each parameter to a be constant 
+# set each parameter to be a constant 
 form <- list(lambda0 ~ 1, 
              sigma  ~ 1)
 
@@ -100,7 +100,7 @@ start <- get_start_values(scrdat)
 start 
 ```
 
-Notice that you do not specify a formula for <code>D</code>. At present, the <code>openpopscr</code> 
+Notice that you do not specify a formula for <code>D</code>. At present, the <code>openpopscr</code> package
 does not allow for density to change over space. 
 
 Before fitting the model, I create the model object: 
@@ -116,8 +116,8 @@ mod$fit()
 ```
 
 If you have the output printed, the "checking convergence" message reports
-whether convergence has been reached and if it has not it reports the code
-output by <code>optim</code> that tells you why it failed to converge. 
+whether convergence has been reached and if it has not reached it reports the code
+output by <code>optim</code>, which tells you why it failed to converge. 
 
 The current value of the parameters is stored inside the model object: 
 ```{r par}
@@ -125,11 +125,11 @@ mod$par()
 ```
 
 This is one benefit of using <code>R6</code> objects;  they can store
-information as computations progress. For example, if I was fitting the model
-using the <code>fit()</code> and for some reason I wanted to stop the fitting
-or the fitting failed because of convergence issues or computational errors; the
+information as computations progress. For example, if I were fitting the model
+using the <code>fit()</code> function and for some reason I wanted to stop the fitting
+or the fitting failed because of convergence issues or computational errors then the
 last value used by the numerical optimiser for each parameter is stored in <code>par()</code>. 
-If I wanted to restart the fitting from this point again, I just need to call <code>fit()</code>
+If I wanted to restart the fitting from this point again, I would just need to call <code>fit()</code>
 again. As you fit more complicated models, it is common for the optimisation to not
 converge because it has reached the maximum number of iterations in the algorithm.
 If this occurs, simply call <code>fit()</code> again and the optimiser will
@@ -137,13 +137,13 @@ continue where it left off.
 
 ## Reading model output 
 
-Once a model has been fit, you can type its name into the console and some
+Once a model has been fitted, you can type its name into the console and some
 summary results are printed: 
 ```{r printres}
 mod
 ```
 
-The parameters are reported on the link scale; this is because when covariates
+The parameters are reported on the link scale because when covariates
 are involved, it is easier to interpret their effects. The package <code>openpopscr</code>
 uses the log-link function for all of these parameters. So, you would take
 the exponential of these reported numbers to obtain the parameter values on the
@@ -156,7 +156,7 @@ mod$get_par("sigma", k = 1, j = 1)
 mod$get_par("D")
 ```
 
-I specify $k = 1, j = 1$ in the functions above for $\sigma, \lambda_0$ because by default
+I specify $k = 1, j = 1$ in the functions above for $\sigma,  \lambda_0$ because by default
 <code>get_par</code> returns the value of these parameters for every occasion and detector. This is
 useful when they vary, but here they are constants, so I only want
 their value on a single occasion for a single detector. 
@@ -194,7 +194,7 @@ age <- as.factor(sample(c("old", "new"), size = scrdat$n_traps(), replace = T))
 scrdat$add_covariate("age", age, "j")
 ```
 
-When adding the covariate to the data, I specify the covariate is of type "j" because it is a detector-level covariate. See the vignette on ScrData class for
+When adding the covariate to the data, I specify the covariate is of type "j" because it is a detector-level covariate. See the vignette on the ScrData class for
 further information. 
 
 I can now fit the model with detector age included. 
@@ -229,12 +229,12 @@ loading covariates into the ScrData object.
 
 Sometimes an individual's activity range within each occasion differs from
 their range when viewed across all occasions. There can be several reasons
-for this; two common reasons are that the individual only explores part of their
+for this. Two common reasons are: the individual only explores part of their
 entire range during each occasion, so the range within each occasion is only
 partial; or, it may be that an individual does explore their entire range
 during each occasion, but the range shifts over time. 
 
-You can investigate this by looking at how the encounter range statistic (see <code>RPSV</code> function in <code>secr</code> package for details) compares over occasions as opposed to within
+You can investigate this by looking at how the encounter range statistic (see the <code>RPSV</code> function in the <code>secr</code> package for details) compares over occasions as opposed to within
 occasions: 
 ```{r rspv}
 # get encounter range statistic for occasion 1
@@ -247,7 +247,7 @@ scrdat$encrange(k = c(1, 3, 5))
 scrdat$encrange(k = c(1, 3, 5), each = TRUE)
 ```
 
-In this case, the mean range within each occasion is `r round(mean(scrdat$encrange(each = TRUE)), 2)` and is similar to the range over all occasions `r round(scrdat$encrange(), 2)`. So, for these data, transience does not appear to be a problem. This is unsurprising given the data were simulated with stationary activity ranges.
+In this case, the mean range within each occasion is `r round(mean(scrdat$encrange(each = TRUE)), 2)` and is similar to the range over all occasions `r round(scrdat$encrange(), 2)`. Therefore, for these data, transience does not appear to be a problem. This is unsurprising given the data were simulated with stationary activity ranges.
 
 I will now simulate some data where activity centres move. In particular, the 
 activity centre of each individual will move by Brownian motion with standard
@@ -270,7 +270,7 @@ scrtransdat <- simulate_scr(true_par, n_occasions, detectors, mesh, move = TRUE,
 ```
 
 Notice the <code>move = TRUE</code> argument to the <code>simulate_scr</code>
-function and the specified true value of sd as  `r true_par$sd`.
+function and the specified true value of sd as `r true_par$sd`.
 
 I now imagine these data were collected in a survey and I want to investigate whether
 transience may be an issue using the encounter range statistic: 
@@ -309,8 +309,7 @@ little large. In general, density estimation tends to be robust to transience
 as the biases in the detection parameters cancel out: $\lambda_0$ leads to 
 density underestimation and $\sigma$ to density overestimation. 
 
-I now fit the transient model. The transient model class is called <code>ScrTransientModel</code>. We must also now specify a start value 
-for the movement parameter. 
+I now fit the transient model. The transient model class is called <code>ScrTransientModel</code>. We must also now specify a start value and a formula for the movement parameter. 
 
 ```{r fittransmod}
 # specify formulas for parameters 
@@ -325,16 +324,16 @@ trans <- ScrTransientModel$new(form, scrtransdat, start)
 ```
 
 Notice that you must specify <code>model = "ScrTransientModel"</code> in 
-the <code>get_start_values</code> so that a start value for the movement
+the <code>get_start_values</code> function so that a start value for the movement
 parameter is supplied. This function assumes by default that you are fitting
 a ScrModel. 
 
-Also, note from the output given when creating the model object that a
+Note, from the output given when creating the model object, that a
 rectangular mesh is created based on the mesh supplied by the user. This is
 because the current algorithm that implements the movement model requires a
 rectangular study space. Note, however, that individuals may only reside and
 move around within the mesh supplied by the user; the extra mesh points created
-to produce a rectangular study space are not accessible. Also note, that the
+to produce a rectangular study space are not accessible. Also, note that the
 rectangular mesh will be larger and contain more mesh points than the user supplied
 mesh, so you may be required to reduce the resolution of the user supplied 
 mesh in order to make computations with the rectangular mesh feasible. 

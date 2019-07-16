@@ -33,15 +33,22 @@ In R, the latest release of the package can be installed using the devtools pack
 The package requires you to have a C compiler installed on your system. Windows users may need to install R-tools for this reason. It is assumed Linux and Mac users have a compiler installed. 
 
 The package uses the <code>RcppParallel</code> package for parallel processing and faster performance. To set the number of threads used by RcppParallel use the following code:
-<code>RcppParallel::setThreadOptions(numThreads = 7)</code>. The documentation and examples included assume that the user is using a machine with 8 available cores and that one core is not used to allow further use of the computer. To find out the number of cores your machine has available use <code>RcppParallel::defaultNumThreads()</code>. For further information about RcppParallel, [see the package's CRAN webpage](https://cran.r-project.org/web/packages/RcppParallel/index.html). 
+<code>RcppParallel::setThreadOptions(numThreads = 7)</code>. The documentation and examples included assume that the user is using a machine with 8 available cores and that one core is not used to allow further use of the computer. To find out the number of cores your machine has available run the following code: <code>RcppParallel::defaultNumThreads()</code>. For further information about RcppParallel, [see the package's CRAN webpage](https://cran.r-project.org/web/packages/RcppParallel/index.html). 
+
 
 ## R6
 
 This package uses <code>R6 classes</code>. <code>R6 classes</code> are used to create objects, which can have properties and functions. These objects are convenient because they can be stored and used as a single <code>R</code> object, but contain all the information and methods related to them. For further information about <code>R6</code>, see this intoduction to [<code>R6</code>](https://r6.r-lib.org/articles/Introduction.html).
 
+
+## The secr package
+
+It is currently assumed that you already know the [<code>secr</code> ](https://CRAN.R-project.org/package=secr) package. If not, it is strongly advised that you read the vignettes included with the secr package and other help files included on the package [website](https://www.otago.ac.nz/density/SECRinR.html). The PDFs on Habitat Masks and Data Input are recommended.
+
+
 ## Using the Package
 
-In this package, there are two main types of <code>R6</code> classes: model classes and the data class. The ScrData class is used to create data objects.There are also classes used to create model objects, which you can fit to your data and obtain inference from. The package contains the following model classes:
+In this package, there are two main types of <code>R6 classes</code>: model classes and the data class. The ScrData class is used to create data objects.There are also classes used to create model objects, which you can fit to your data and obtain inference from. The package contains the following model classes:
 
 * ScrModel for fitting closed population SCR models
 * ScrTransientModel as above but with transience
@@ -60,6 +67,3 @@ To learn how to use the package, I recommend reading the ScrData and ScrModel vi
 
 The folder inst/examples/ in the [repository](https://github.com/r-glennie/openpopscr) contains code showing how to fit each type of model to simulated data.
 
-## The secr package
-
-It is currently assumed that you already know the [<code>secr</code> ](https://CRAN.R-project.org/package=secr) package. If not, it is strongly advised that you read the vignettes included with the secr package and other help files included on the package [website](https://www.otago.ac.nz/density/SECRinR.html). The PDFs on Habitat Masks and Data Input are recommended.
