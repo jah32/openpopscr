@@ -167,7 +167,7 @@ Temporal covariates are added in the same way, except the <code>cov_type</code> 
 
 Once covariates have been included, you can extract the covariates for any particular detector or time using the <code>covs</code> function. To list all covariates, just call the function with no arguments: 
 
-```{covs}
+```{r covs}
 scrdat$covs()
 ```
 

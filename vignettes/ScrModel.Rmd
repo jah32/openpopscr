@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
   fig.width = 7, 
   fig.height = 7, 
   comment = "#>"
+  
 )
 ```
 
@@ -183,7 +184,7 @@ detector: old and new. It is possible that the old detectors are less likely to
 detect an individual than a new detector. This can be captured by the model by
 allowing this covariate to change the value of $\lambda_0$, the encounter
 intercept. 
-```{r dcov}
+```{r dcov, eval = FALSE}
 # set seed so random covariate values will always be the same 
 set.seed(58285)
 # Simulate, for each detector, an age class: old or new. In reality, this
