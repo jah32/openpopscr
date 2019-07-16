@@ -117,6 +117,7 @@ struct PrCaptureCalculator : public Worker {
       arma::vec savedenc(M);
       double sumcap;
       int j = -1; 
+      bool recovered = false;
       for (int prim = 0; prim < n_prim; ++prim) { 
        bool unseen = true;
         if (entry(i) - 1 < prim) {
@@ -127,22 +128,31 @@ struct PrCaptureCalculator : public Worker {
            if (detector_type != 3) {
             for (int k = 0; k < K; ++k) {
               if (usage(k, j) < 1e-16) continue;
-              if (capthist(i, j, k) < 0.5 & detector_type == 3) continue;
+              if (recovered) continue;
               if (detector_type == 1 | detector_type == 4) {
                 probfield(i).slice(prim).col(alive_col) += capthist(i, j, k) * logenc0.slice(j).col(k) - usage(k, j) * enc0.slice(j).col(k);
               } else if (detector_type == 2) {
                 probfield(i).slice(prim).col(alive_col) += capthist(i, j, k) * log_penc.slice(j).col(k) - (1.0 - capthist(i, j, k)) * usage(k, j) * enc0.slice(j).col(k);
               } 
               if (capthist(i, j, k) > 1e-16) unseen = false;
+              if (capthist(i, j, k) == -1){
+               recovered = true;
+               unseen = false;
+              };
             }
            }
             if (detector_type == 3) {
+              if (recovered) continue;
               arma::vec cap_ij = capthist(arma::span(i), arma::span(j), arma::span::all); 
               sumcap = arma::accu(cap_ij); 
               if (sumcap > 0) unseen = false; 
+              if (sumcap < 0){
+                unseen = false;
+                recovered = true;
+              }
               savedenc += logenc0.slice(j) * cap_ij;  
               if (!unseen) probfield(i).slice(prim).col(alive_col) += savedenc - sumcap * log_total_enc.col(j); 
-              probfield(i).slice(prim).col(alive_col) += -(1.0 - sumcap) * total_enc.col(j) + sumcap * log_total_penc.col(j); 
+              probfield(i).slice(prim).col(alive_col) += -(1.0 - sumcap) * total_enc.col(j) + sumcap * log_total_penc.col(j);
             }
           }
         }
@@ -154,12 +164,22 @@ struct PrCaptureCalculator : public Worker {
           }
         }
         probfield(i).slice(prim).col(alive_col) = exp(probfield(i).slice(prim).col(alive_col)); 
+        if (recovered){
+          probfield(i).slice(prim).col(alive_col).zeros(); 
+          if(num_states == 3){
+            probfield(i).slice(prim).col(0).zeros();
+            probfield(i).slice(prim).col(2).ones();
+          }
+          if(num_states == 2){
+            probfield(i).slice(prim).col(1).ones();
+          }
+        }
       }
     }
   }
 };  
   
-//' Computes probability of each capture record
+//' Computes probability of each capture record 
 //'
 //' @param n number of individuals 
 //' @param J total number of occasions 
@@ -172,7 +192,7 @@ struct PrCaptureCalculator : public Worker {
 //' @param detector_type 1 = count, 2 = proximity/binary, 3 = multi-catch, 4 = transect 
 //'
 //' @return  Array with (i,j,m) entry the probability of capture record for individual i in occasion j given activity centre at mesh point m  
-//' 
+//'  # list with [[i]][m, state, j] prob of capt record for individual i in primary occasion j with activity centre m in the given state(alive, dead, not entered)
 // [[Rcpp::export]]
 arma::field<arma::cube> C_calc_pr_capture(const int n, const int J, const int K, const int M, 
                              const arma::cube& capthist, 
