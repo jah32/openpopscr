@@ -125,6 +125,7 @@ struct PrCaptureCalculator : public Worker {
            ++j;
            if (detector_type == 3) savedenc.zeros();
            sumcap = 0;
+           if (recovered) continue;
            if (detector_type != 3) {
             for (int k = 0; k < K; ++k) {
               if (usage(k, j) < 1e-16) continue;
