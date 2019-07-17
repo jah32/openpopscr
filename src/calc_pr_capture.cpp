@@ -117,10 +117,22 @@ struct PrCaptureCalculator : public Worker {
       arma::vec savedenc(M);
       double sumcap;
       int j = -1; 
+      bool recovered = false;
       for (int prim = 0; prim < n_prim; ++prim) { 
        bool unseen = true;
-       bool recovered = false;
-       if (entry(i) - 1 < prim) {
+       //bool recovered = false;
+       if (entry(i) - 1 < prim){
+         if(recovered){
+          probfield(i).slice(prim).col(alive_col).fill(1e-300); 
+          if(num_states == 3){
+           probfield(i).slice(prim).col(0).zeros();
+           probfield(i).slice(prim).col(2).ones();
+          }
+          if(num_states == 2){
+           probfield(i).slice(prim).col(1).ones();
+          }
+          continue;
+         }
         for (int s = 0; s < S(prim); ++s) {
           ++j;
           if (recovered) continue;
@@ -141,7 +153,7 @@ struct PrCaptureCalculator : public Worker {
                unseen = false;
               }
               if (recovered){
-                probfield(i).slice(prim).col(alive_col).fill(-750); 
+                probfield(i).slice(prim).col(alive_col).fill(-700); 
                 if(num_states == 3){
                   probfield(i).slice(prim).col(0).zeros();
                   probfield(i).slice(prim).col(2).ones();
@@ -151,8 +163,8 @@ struct PrCaptureCalculator : public Worker {
                 }
               }
             }
-           }
-           if (detector_type == 3) {
+          }
+          if (detector_type == 3) {
               if (recovered) continue;
               arma::vec cap_ij = capthist(arma::span(i), arma::span(j), arma::span::all); 
               sumcap = arma::accu(cap_ij); 
@@ -165,7 +177,7 @@ struct PrCaptureCalculator : public Worker {
               if (!unseen) probfield(i).slice(prim).col(alive_col) += savedenc - sumcap * log_total_enc.col(j); 
               probfield(i).slice(prim).col(alive_col) += -(1.0 - sumcap) * total_enc.col(j) + sumcap * log_total_penc.col(j);
               if (recovered){
-                probfield(i).slice(prim).col(alive_col).fill(-750); 
+                probfield(i).slice(prim).col(alive_col).fill(-700); 
                 if(num_states == 3){
                   probfield(i).slice(prim).col(0).zeros();
                   probfield(i).slice(prim).col(2).ones();
@@ -173,7 +185,7 @@ struct PrCaptureCalculator : public Worker {
                 if(num_states == 2){
                   probfield(i).slice(prim).col(1).ones();
                 }
-             } 
+              } 
            }
         }
         if (unseen) {
@@ -187,7 +199,8 @@ struct PrCaptureCalculator : public Worker {
       }
     }
   }
-};  
+}
+} ;  
   
 //' Computes probability of each capture record 
 //'
