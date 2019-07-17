@@ -117,17 +117,17 @@ struct PrCaptureCalculator : public Worker {
       arma::vec savedenc(M);
       double sumcap;
       int j = -1; 
-      bool recovered = false;
       for (int prim = 0; prim < n_prim; ++prim) { 
        bool unseen = true;
-        if (entry(i) - 1 < prim) {
-         for (int s = 0; s < S(prim); ++s) {
-           ++j;
-           if (detector_type == 3) savedenc.zeros();
-           sumcap = 0;
-           if (recovered) continue;
-           if (detector_type != 3) {
-            for (int k = 0; k < K; ++k) {
+       bool recovered = false;
+       if (entry(i) - 1 < prim) {
+        for (int s = 0; s < S(prim); ++s) {
+          ++j;
+          if (recovered) continue;
+          if (detector_type == 3) savedenc.zeros();
+          sumcap = 0;
+          if (detector_type != 3) {
+           for (int k = 0; k < K; ++k) {
               if (usage(k, j) < 1e-16) continue;
               if (recovered) continue;
               if (detector_type == 1 | detector_type == 4) {
@@ -139,10 +139,20 @@ struct PrCaptureCalculator : public Worker {
               if (capthist(i, j, k) == -1){
                recovered = true;
                unseen = false;
-              };
+              }
+              if (recovered){
+                probfield(i).slice(prim).col(alive_col).fill(-750); 
+                if(num_states == 3){
+                  probfield(i).slice(prim).col(0).zeros();
+                  probfield(i).slice(prim).col(2).ones();
+                }
+                if(num_states == 2){
+                  probfield(i).slice(prim).col(1).ones();
+                }
+              }
             }
            }
-            if (detector_type == 3) {
+           if (detector_type == 3) {
               if (recovered) continue;
               arma::vec cap_ij = capthist(arma::span(i), arma::span(j), arma::span::all); 
               sumcap = arma::accu(cap_ij); 
@@ -154,8 +164,17 @@ struct PrCaptureCalculator : public Worker {
               savedenc += logenc0.slice(j) * cap_ij;  
               if (!unseen) probfield(i).slice(prim).col(alive_col) += savedenc - sumcap * log_total_enc.col(j); 
               probfield(i).slice(prim).col(alive_col) += -(1.0 - sumcap) * total_enc.col(j) + sumcap * log_total_penc.col(j);
-            }
-          }
+              if (recovered){
+                probfield(i).slice(prim).col(alive_col).fill(-750); 
+                if(num_states == 3){
+                  probfield(i).slice(prim).col(0).zeros();
+                  probfield(i).slice(prim).col(2).ones();
+                }
+                if(num_states == 2){
+                  probfield(i).slice(prim).col(1).ones();
+                }
+             } 
+           }
         }
         if (unseen) {
           if (num_states == 2) probfield(i).slice(prim).col(1 - alive_col).ones(); 
@@ -165,16 +184,6 @@ struct PrCaptureCalculator : public Worker {
           }
         }
         probfield(i).slice(prim).col(alive_col) = exp(probfield(i).slice(prim).col(alive_col)); 
-        if (recovered){
-          probfield(i).slice(prim).col(alive_col).zeros(); 
-          if(num_states == 3){
-            probfield(i).slice(prim).col(0).zeros();
-            probfield(i).slice(prim).col(2).ones();
-          }
-          if(num_states == 2){
-            probfield(i).slice(prim).col(1).ones();
-          }
-        }
       }
     }
   }
