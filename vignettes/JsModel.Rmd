@@ -88,7 +88,7 @@ parameter.
 
 ```{r setupscrmod}
 
-# set each parameter to a be constant 
+# set each parameter to be a constant 
 form <- list(lambda0 ~ 1, 
              sigma  ~ 1,
              phi ~ 1, 
