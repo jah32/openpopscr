@@ -58,7 +58,7 @@
 ScrModel <- R6Class("ScrModel", 
   public = list(
     
-    initialize = function(form, data, start, detectfn = NULL, print = TRUE) {
+    initialize = function(form, data, start, sex = NULL, target = NULL, detectfn = NULL, print = TRUE) {
       private$data_ <- data
       if (print) cat("Reading formulae.......")
       private$form_ <- form 
@@ -67,6 +67,10 @@ ScrModel <- R6Class("ScrModel",
         private$form_ <- c(private$form_, list(D ~ 1))
         par_names <- c(par_names, "D") 
       }
+      if(is.null(sex)) sex <- rep(1, data$n())
+      if(is.null(target)) target <- 1
+      private$sex_ <- sex
+      private$target_ <- target
       # detection function 
       if (is.null(detectfn)) {
         private$detfn_ <- DetFn$new()
@@ -160,7 +164,7 @@ ScrModel <- R6Class("ScrModel",
      return(enc_rate) 
     }, 
     
-    calc_pr_capture = function() {
+    calc_pr_capture = function(pi =  1) {
       n_occasions <- private$data_$n_occasions()
       enc_rate0 <- self$calc_encrate(transpose = TRUE)
       trap_usage <- usage(private$data_$traps())
@@ -168,6 +172,8 @@ ScrModel <- R6Class("ScrModel",
       n_meshpts <- private$data_$n_meshpts() 
       n_traps <- private$data_$n_traps()
       capthist <- private$data_$capthist()
+      sex <- private$sex_
+      target <- private$target_
       prob <- C_calc_pr_capture(n, 
                                 n_occasions, 
                                 n_traps, 
@@ -179,7 +185,7 @@ ScrModel <- R6Class("ScrModel",
                                 self$data()$detector_type(), 
                                 n_occasions, 
                                 rep(1, n_occasions),
-                                rep(0, n))
+                                rep(0, n), sex, target, pi)
       return(prob)
     },
     
@@ -211,14 +217,14 @@ ScrModel <- R6Class("ScrModel",
       return(pdet)
     }, 
     
-    calc_llk = function(param = NULL, names = NULL) {
+    calc_llk = function(param = NULL, names = NULL, pi) {
       if (!is.null(names)) names(param) <- names 
       if (!is.null(param)) self$set_par(private$convert_vec2par(param));
       # initial distribution 
       pr0 <- self$calc_initial_distribution()
       # compute probability of capture histories 
       # across all individuals, occasions and traps 
-      pr_capture <- self$calc_pr_capture()
+      pr_capture <- self$calc_pr_capture(pi)
       # compute likelihood for each individual
       n <- private$data_$n()
       n_occasions <- private$data_$n_occasions()
@@ -232,14 +238,14 @@ ScrModel <- R6Class("ScrModel",
       return(llk)
     },
     
-    fit = function(ini_par = NULL, nlm.args = NULL) {
+    fit = function(ini_par = NULL, nlm.args = NULL, pi) {
       if (!is.null(ini_par)) self$set_par(ini_par)
       par <- self$par()
       w_par <- private$convert_par2vec(par)
       t0 <- Sys.time()
       if (private$print_) cat("Fitting model..........\n")
       if (is.null(nlm.args)) nlm.args <- list(stepmax = 10)
-      args <- c(list(private$calc_negllk, w_par, names = names(w_par), hessian = TRUE), nlm.args)
+      args <- c(list(private$calc_negllk, w_par, names = names(w_par), pi,  hessian = TRUE), nlm.args)
       mod <- do.call(nlm, args)
       t1 <- Sys.time()
       difft <- t1 - t0 
@@ -319,6 +325,8 @@ ScrModel <- R6Class("ScrModel",
   
   private = list(
     data_ = NULL,
+    sex = NULL,
+    target = NULL,
     detfn_ = NULL, 
     form_ = NULL, 
     par_ = NULL, 
@@ -388,8 +396,8 @@ ScrModel <- R6Class("ScrModel",
       return(list(LCL = lcl, UCL = ucl))
     },
     
-    calc_negllk = function(param = NULL, names = NULL) {
-      negllk <- -self$calc_llk(param, names)
+    calc_negllk = function(param = NULL, names = NULL, pi) {
+      negllk <- -self$calc_llk(param, names, pi)
       return(negllk)
     },
     
