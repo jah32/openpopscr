@@ -48,6 +48,9 @@ struct PrCaptureCalculator : public Worker {
   const int n_prim; 
   const arma::vec& S; 
   const arma::vec& entry; 
+  const arma::vec& sex;
+  const int target;
+  const double pi;
   arma::mat total_enc;
   arma::mat log_total_enc; 
   arma::mat log_total_penc; 
@@ -70,6 +73,9 @@ struct PrCaptureCalculator : public Worker {
                         const int n_prim, 
                         const arma::vec& S, 
                         const arma::vec& entry, 
+                        const arma::vec& sex,  
+                        const int target;
+                        const double pi;
                         arma::field<arma::cube>& probfield) : J(J), K(K), M(M), 
                         alive_col(alive_col), 
                         capthist(capthist), 
@@ -79,7 +85,10 @@ struct PrCaptureCalculator : public Worker {
                         detector_type(detector_type),
                         n_prim(n_prim), 
                         S(S), 
-                        entry(entry), 
+                        entry(entry),
+                        sex(sex),
+                        target(target),
+                        pi(pi),
                         probfield(probfield) {
     
     if (detector_type == 3) { 
@@ -197,6 +206,10 @@ struct PrCaptureCalculator : public Worker {
         }
         probfield(i).slice(prim).col(alive_col) = exp(probfield(i).slice(prim).col(alive_col)); 
       }
+       if(sex(i)!=target){
+        if(sex(i) == -1) probfield(i).slice(prim) *= pi;
+        else probfield(i).slice(prim).zeros();
+      }
     }
   }
 }
@@ -225,12 +238,15 @@ arma::field<arma::cube> C_calc_pr_capture(const int n, const int J, const int K,
                              const int detector_type, 
                              const int n_prim, 
                              const arma::vec S, 
-                             const arma::vec entry) {
+                             const arma::vec entry,
+                             const arma::vec sex,
+                             const int target
+                             const double pi) {
   int alive_col = 1; 
   if (num_states < 3) alive_col = 0; 
   arma::field<arma::cube> probfield(n);
   for (int i = 0; i < n; ++i) probfield(i) = arma::zeros<arma::cube>(M, num_states, n_prim); 
-  PrCaptureCalculator pr_capture_calc(J, K, M, alive_col, capthist, enc0, usage, num_states, detector_type, n_prim, S, entry, probfield); 
+  PrCaptureCalculator pr_capture_calc(J, K, M, alive_col, capthist, enc0, usage, num_states, detector_type, n_prim, S, entry, sex, target, pi, probfield); 
   parallelFor(0, n, pr_capture_calc, 1); 
   return(probfield);
 }
