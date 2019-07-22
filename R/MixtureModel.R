@@ -57,9 +57,12 @@ MixtureModel <- R6Class("MixtureModel",
         dat[[i]] <- data
       }
       data <- dat
+      private$sex_ <- sex
+      private$num_sexes_ <- num_sexes
+      private$pi_ <- pi
       private$data_ <- data
-			private$n_strata_ <- num_sexes
-			args <- c(args, print = print)
+      private$n_strata_ <- num_sexes
+      args <- c(args, print = print)
 			if (print) cat("Creating model objects for each stratum.........\n")
 			private$objs_ <- private$forms_ <- vector(mode = "list", length = private$n_strata_)
 			private$model_ <- model
@@ -69,7 +72,7 @@ MixtureModel <- R6Class("MixtureModel",
 			 private$forms_[[s]] <- c(shared_form, private_form[[s]]) 
 			 private$objs_[[s]] <- do.call(create_obj$new, c(list(form = private$forms_[[s]], 
 			                                 data = data[[s]], 
-			                                 start = start, sex, num_sexes), 
+			                                 start = start, private$sex_, target = i), 
 			                            args))
 			}
 			if (print) cat("Creating parameters for each model.......")
@@ -94,6 +97,7 @@ MixtureModel <- R6Class("MixtureModel",
       if (!is.null(names)) names(param) <- names 
       if (!is.null(param)) {private$par_ <- param; private$split_par()}
       llk <- 0 
+      pi <- private$pi_
       for (i in 1:private$n_strata_) {
         ipar <- private$ipar_[[i]]
         nms <- names(ipar)
@@ -172,7 +176,8 @@ MixtureModel <- R6Class("MixtureModel",
                    
   private = list(
     data_ = NULL,
-    model_ = NULL, 
+    model_ = NULL,
+    sex_ = NULL, num_sexes_ = NULL, pi_ = NULL,
     n_strata_ = NULL, 
     forms_ = NULL,
     objs_ = NULL,
